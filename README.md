@@ -3,3 +3,76 @@
 ### ⚠️ CodeWars Spoiler Alert
 
 This project is a solution to CodeWars Kata [Brainfuck Translator](https://www.codewars.com/kata/58924f2ca8c628f21a0001a1).
+
+## Execution
+Use the `run` bash script.
+```
+USAGE: run "[Brainfuck code]"
+```
+
+## Example
+#### Command 1
+```bash
+$ run "[.[]]"
+```
+#### Output 1
+```c
+if (*p) do {
+  putchar(*p);
+} while (*p);
+
+bfc: [ exited with code 0 ]
+```
+
+#### Command 2
+```bash
+# hello world
+$ run "++++++++++[>+++++++>++++++++++>+++>+++++++++<<<<-]>++.>+.+++++++..+++.>++.>---.<<.+++.------.--------.>+."
+```
+
+#### Output 2
+```c
+*p += 10;
+if (*p) do {
+  p += 1;
+  *p += 7;
+  p += 1;
+  *p += 10;
+  p += 1;
+  *p += 3;
+  p += 1;
+  *p += 9;
+  p -= 4;
+  *p -= 1;
+} while (*p);
+p += 1;
+*p += 2;
+putchar(*p);
+p += 1;
+*p += 1;
+putchar(*p);
+*p += 7;
+putchar(*p);
+putchar(*p);
+*p += 3;
+putchar(*p);
+p += 1;
+*p += 2;
+putchar(*p);
+p += 1;
+*p -= 3;
+putchar(*p);
+p -= 2;
+putchar(*p);
+*p += 3;
+putchar(*p);
+*p -= 6;
+putchar(*p);
+*p -= 8;
+putchar(*p);
+p += 1;
+*p += 1;
+putchar(*p);
+
+bfc: [ exited with code 0 ]
+```
