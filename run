@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# clear
+
+# gcc -Wall -g -D DEBUG="(1)" -D UNOPTIMISE="(1)" -o bfc bf_to_c.c
+# gcc -Wall -g -D DEBUG="(1)" -o bfc bf_to_c.c
+# gdb bfc
+
+gcc -Wall -Ofast -o bfc bf_to_c.c
+./bfc $@
+
+echo "bfc: [ exited with code $? ]"
+
+rm bfc
