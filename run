@@ -7,7 +7,7 @@
 # gdb bfc
 
 gcc -Wall -Ofast -o bfc bf_to_c.c
-./bfc $@
+./bfc "$1"
 
 echo "bfc: [ exited with code $? ]"
 
