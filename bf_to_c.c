@@ -230,6 +230,7 @@ string brainfuck_to_c (const string src)
     // optimize
     # ifndef UNOPTIMISE
         opt_src = bf_optimize (stripped_src);
+        free (stripped_src);
     # else
         opt_src = stripped_src;
     # endif
@@ -245,12 +246,12 @@ string brainfuck_to_c (const string src)
     // replace codes
     c_code = bf_replace_to_c (opt_src);
 
+    free (opt_src);
+
     # ifdef DEBUG
         printf ("\nc_code:\n%s\n", c_code);
     # endif
 
-    free (opt_src);
-    free (stripped_src);
     return c_code;
 }
 
