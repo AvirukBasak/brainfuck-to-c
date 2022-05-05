@@ -23,6 +23,8 @@ typedef char* string;
 # define ERR_ERROR  "Error!"
 # define ABORT_IF_NULL_PTR(ptr) if (ptr == NULL) abort()
 
+# define OVERLFOW_BUFF_LEN           ( 16 )
+
 // required for generating code
 # define TAB                         "  "
 # define NWL                         ";\n"
@@ -45,7 +47,7 @@ string bf_strip (const string src)
     string stripped_src,
            stripped_src_ptr; 
 
-    stripped_src = (string) calloc (len + 1, sizeof (char));
+    stripped_src = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
     ABORT_IF_NULL_PTR (stripped_src);
     stripped_src_ptr = stripped_src;
 
@@ -79,7 +81,7 @@ string bf_optimize (const string src)
            src_ptr = src;
     ui64 len = strlen (src);
 
-    opt_stack = (string) calloc (len + 1, sizeof (char));
+    opt_stack = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
     ABORT_IF_NULL_PTR (opt_stack);
     opt_stack_top = opt_stack;
 
@@ -146,7 +148,7 @@ string bf_replace_to_c (const string opt_src)
     string c_code;
 
     // allocating memory for c code
-    c_code = (string) calloc ((1
+    c_code = (string) calloc ((OVERLFOW_BUFF_LEN
         + block_count (opt_src, '+') * strlen (REPLACE_INC "1000" NWL)
         + block_count (opt_src, '-') * strlen (REPLACE_DEC "1000" NWL)
         + block_count (opt_src, '>') * strlen (REPLACE_RSHIFT "1000" NWL)
