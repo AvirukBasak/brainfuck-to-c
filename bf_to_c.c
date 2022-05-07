@@ -4,6 +4,7 @@
 # include <stdio.h>
 
 // required in this code
+
 typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
@@ -17,38 +18,54 @@ typedef uint64_t ui64;
 typedef ui8 bool;
 typedef char* string;
 
-# define true       ((bool) 1)
-# define false      ((bool) 0)
+# define true                           ((bool) 1)
+# define false                          ((bool) 0)
 
-# define ERR_ERROR  "Error!"
-# define ABORT_IF_NULL_PTR(ptr) if (ptr == NULL) abort()
+# define ERR_ERROR                      "Error!"
+# define ABORT_IF_NULL_PTR(ptr)         if (ptr == NULL) abort()
 
-# define OVERLFOW_BUFF_LEN           ( 16 )
+# define OVERLFOW_BUFF_LEN              ( 16 )
 
 // required for generating code
-# define TAB                         "  "
-# define NWL                         ";\n"
-# define PRINT_TABS(j, tabs, c_code) for (j = 0; j < tabs; j++) strcat (c_code, TAB)
 
-# define REPLACE_INC           "*p += "               // [+]{0:x} - 7+
-# define REPLACE_DEC           "*p -= "               // [-]{0:x} - 7+
-# define REPLACE_RSHIFT        "p += "                // [>]{0:y} - 6+
-# define REPLACE_LSHIFT        "p -= "                // [<]{0:y} - 6+
-# define REPLACE_LOOP_STRT     "if (*p) do {\n"       // [        - 13
-# define REPLACE_LOOP_STOP     "} while (*p);\n"      // ]        - 14
-# define REPLACE_I             "*p = getchar();\n"    // ,        - 16
-# define REPLACE_O             "putchar(*p);\n"       // .        - 13
+# define TAB                            "  "
+# define NWL                            ";\n"
+# define PRINT_TABS(j, tabs, c_code)    for (j = 0; j < tabs; j++) strcat (c_code, TAB)
 
+# define REPLACE_INC                    "*p += "               // [+]{0:x} - 7+
+# define REPLACE_DEC                    "*p -= "               // [-]{0:x} - 7+
+# define REPLACE_RSHIFT                 "p += "                // [>]{0:y} - 6+
+# define REPLACE_LSHIFT                 "p -= "                // [<]{0:y} - 6+
+# define REPLACE_LOOP_STRT              "if (*p) do {\n"       // [        - 13
+# define REPLACE_LOOP_STOP              "} while (*p);\n"      // ]        - 14
+# define REPLACE_I                      "*p = getchar();\n"    // ,        - 16
+# define REPLACE_O                      "putchar(*p);\n"       // .        - 13
+
+/**
+ * @brief Create a new string of size len using calloc
+ * @param len The string length
+ * @return char* Pointer to heap allocated string. Remember to free it.
+ */
+string new_string (ui64 len)
+{
+    string str =  (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
+    ABORT_IF_NULL_PTR (str);
+    return str;
+}
+
+/**
+ * @brief Remove characters that are not valid bf instructions
+ * @param src The char array containing the raw source code
+ * @return char* Pointer to heap allocated stripped source. Remember to free it.
+ */
 string bf_strip (const string src)
 {
-    ui64 i,
-         len = strlen (src);
+    ui64 i, len;
+    string stripped_src, stripped_src_ptr;
 
-    string stripped_src,
-           stripped_src_ptr; 
+    len = strlen (src);
 
-    stripped_src = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
-    ABORT_IF_NULL_PTR (stripped_src);
+    stripped_src = new_string (len);
     stripped_src_ptr = stripped_src;
 
     for (i = 0; i < len; i++)
@@ -59,11 +76,22 @@ string bf_strip (const string src)
     return stripped_src;
 }
 
+/**
+ * @brief Validates the brainfuck code.
+ *
+ * This function only checks for proper closing of loops.
+ *
+ * @param src The char array containing the stripped source code.
+ * @return bool 1 if valid, 0 otherwise (macroed as true and false respectively).
+ */
 bool bf_validate (const string src)
 {
-    ui64 i,
-         len = strlen (src);
-    i64 count = 0;
+    ui64 i, len;
+    i64 count;
+
+    len = strlen (src);
+    count = 0;
+
     for (i = 0; i < len; i++) {
         if (src[i] == '[')
             count++;
@@ -73,16 +101,24 @@ bool bf_validate (const string src)
     return (bool) !count;
 }
 
+/**
+ * @brief Removes annihilating occurance of instructions
+ *
+ * Eg: if input is "--+++", post optimization will be "+"
+ *
+ * @param src The char array containing the validated source code.
+ * @return char* Pointer to heap allocated optimized source. Remember to free it.
+ */
 string bf_optimize (const string src)
 {
+    ui64 len;
+    string opt_stack, opt_stack_top, src_ptr;
     char c;
-    string opt_stack,
-           opt_stack_top,
-           src_ptr = src;
-    ui64 len = strlen (src);
 
-    opt_stack = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
-    ABORT_IF_NULL_PTR (opt_stack);
+    len = strlen (src);
+    src_ptr = src;
+
+    opt_stack = new_string (len);
     opt_stack_top = opt_stack;
 
     # define stk_top (opt_stack_top - 1)
@@ -110,21 +146,33 @@ string bf_optimize (const string src)
     return opt_stack;
 }
 
-ui64 count (const string str, const char c) {
-    ui64 i,
-         count = 0,
-         len = strlen (str);
+/**
+ * @brief Count occurances of a character in a string
+ */
+ui64 count (const string str, const char c)
+{
+    ui64 i, count, len;
+
+    count = 0;
+    len = strlen (str);
+
     for (i = 0; i < len; i++)
         if (str[i] == c)
             count++;
     return count;
 }
 
-ui64 block_count (const string str, const char c) {
-    ui64 i,
-         count = 0,
-         block_cnt = 0,
-         len = strlen (str);
+/**
+ * @brief Count consecutive occurances of a character in a string
+ */
+ui64 block_count (const string str, const char c)
+{
+    ui64 i, count, block_cnt, len;
+
+    count = 0;
+    block_cnt = 0;
+    len = strlen (str);
+
     for (i = 0; i < len + 1; i++) {
         if (str[i] == c)
             count++;
@@ -136,20 +184,22 @@ ui64 block_count (const string str, const char c) {
     return count;
 }
 
+/**
+ * @brief Converts optimized bf code to C source code
+ */
 string bf_replace_to_c (const string opt_src)
 {
-    ui64 i, j,
-         tabs = 0,
-         count_operations = 0,
-         len = strlen (opt_src);
-
+    ui64 i, j, tabs, count_operations, len;
+    string c_code;
     char c;
 
-    string c_code;
+    tabs = 0;
+    count_operations = 0;
+    len = strlen (opt_src);
 
     // allocating memory for c code
-    c_code = (string) calloc ((OVERLFOW_BUFF_LEN
-        + block_count (opt_src, '+') * strlen (REPLACE_INC "1000" NWL)
+    c_code = new_string (
+          block_count (opt_src, '+') * strlen (REPLACE_INC "1000" NWL)
         + block_count (opt_src, '-') * strlen (REPLACE_DEC "1000" NWL)
         + block_count (opt_src, '>') * strlen (REPLACE_RSHIFT "1000" NWL)
         + block_count (opt_src, '<') * strlen (REPLACE_LSHIFT "1000" NWL)
@@ -157,8 +207,7 @@ string bf_replace_to_c (const string opt_src)
         + count (opt_src, ']') * strlen (REPLACE_LOOP_STOP)
         + count (opt_src, '.') * strlen (REPLACE_I)
         + count (opt_src, ',') * strlen (REPLACE_O)
-    ), sizeof (char));
-    ABORT_IF_NULL_PTR (c_code);
+    );
 
     for (i = 0; i < len; i++) {
         c = opt_src[i];
@@ -212,11 +261,12 @@ string bf_replace_to_c (const string opt_src)
     return c_code;
 }
 
+/**
+ * @brief Wrapper to do all the stuff of translation
+ */
 string brainfuck_to_c (const string src)
 {
-    string stripped_src,
-           opt_src,
-           c_code;
+    string stripped_src, opt_src, c_code;
 
     // remove non-code characters
     stripped_src = bf_strip (src);
