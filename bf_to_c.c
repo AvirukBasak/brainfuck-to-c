@@ -20,17 +20,14 @@ typedef char* string;
 
 # define true                           ((bool) 1)
 # define false                          ((bool) 0)
-
 # define ERR_ERROR                      "Error!"
-# define ABORT_IF_NULL_PTR(ptr)         if (ptr == NULL) abort()
-
 # define OVERLFOW_BUFF_LEN              ( 16 )
 
 // required for generating code
 
 # define TAB                            "  "
 # define NWL                            ";\n"
-# define PRINT_TABS(j, tabs, c_code)    for (j = 0; j < tabs; j++) strcat (c_code, TAB)
+# define PUT_TABS(j, tabs, c_code)      for (j = 0; j < tabs; j++) strcat (c_code, TAB)
 
 # define REPLACE_INC                    "*p += "               // [+]{0:x} - 7+
 # define REPLACE_DEC                    "*p -= "               // [-]{0:x} - 7+
@@ -50,7 +47,8 @@ string new_string (ui64 len)
 {
     string str;
     str = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
-    ABORT_IF_NULL_PTR (str);
+    if (str == NULL)
+        abort();
     return str;
 }
 
@@ -228,7 +226,7 @@ string bf_replace_to_c (const string opt_src)
         c = opt_src[i];
         count_operations = 0;
         if (c == '+' || c == '-' || c == '>' || c == '<') {
-            PRINT_TABS (j, tabs, c_code);
+            PUT_TABS (j, tabs, c_code);
             while (opt_src[i] == c) {
                 count_operations++;
                 i++;
@@ -257,18 +255,18 @@ string bf_replace_to_c (const string opt_src)
                 strcat (c_code, NWL);
             }
         } else if (c == ',') {
-            PRINT_TABS (j, tabs, c_code);
+            PUT_TABS (j, tabs, c_code);
             strcat (c_code, REPLACE_I);
         } else if (c == '.') {
-            PRINT_TABS (j, tabs, c_code);
+            PUT_TABS (j, tabs, c_code);
             strcat (c_code, REPLACE_O);
         } else if (c == '[') {
-            PRINT_TABS (j, tabs, c_code);
+            PUT_TABS (j, tabs, c_code);
             strcat (c_code, REPLACE_LOOP_STRT);
             tabs++;
         } else if (c == ']') {
             tabs--;
-            PRINT_TABS (j, tabs, c_code);
+            PUT_TABS (j, tabs, c_code);
             strcat (c_code, REPLACE_LOOP_STOP);
         }
     }
