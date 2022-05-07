@@ -320,7 +320,8 @@ string brainfuck_to_c (const string src)
     return c_code;
 }
 
-int main (int argsc, char **argsv) {
+int main (int argsc, char **argsv)
+{
     string c_code;
     if (argsc > 1) {
         c_code = brainfuck_to_c (argsv[1]);
