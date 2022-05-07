@@ -48,9 +48,24 @@ typedef char* string;
  */
 string new_string (ui64 len)
 {
-    string str =  (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
+    string str;
+    str = (string) calloc (len + OVERLFOW_BUFF_LEN, sizeof (char));
     ABORT_IF_NULL_PTR (str);
     return str;
+}
+
+/**
+ * @brief Delete a heap allocated string
+ * @param str Pointer to the character pointer (string*), this pointer is nulled.
+ * @return bool 0 if pointer is NULL.
+ */
+bool del_string (string *str_ptr)
+{
+    if (!str_ptr || !(*str_ptr))
+        return false;
+    free (*str_ptr);
+    *str_ptr = NULL;
+    return true;
 }
 
 /**
@@ -282,7 +297,7 @@ string brainfuck_to_c (const string src)
     // optimize
     # ifndef UNOPTIMISE
         opt_src = bf_optimize (stripped_src);
-        free (stripped_src);
+        del_string (&stripped_src);
     # else
         opt_src = stripped_src;
     # endif
@@ -298,7 +313,7 @@ string brainfuck_to_c (const string src)
     // replace codes
     c_code = bf_replace_to_c (opt_src);
 
-    free (opt_src);
+    del_string (&opt_src);
 
     # ifdef DEBUG
         printf ("\nc_code:\n%s\n", c_code);
@@ -314,6 +329,7 @@ int main (int argsc, char **argsv) {
         # ifndef DEBUG
             printf ("%s\n", c_code);
         # endif
+        del_string (&c_code);
         exit (0);
     } else {
         fprintf (stderr, "error: no args provided\n");
