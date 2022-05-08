@@ -24,9 +24,17 @@ typedef char* string;
 # define OVERLFOW_BUFF_LEN              ( 16 )
 
 // required for generating code
-
-# define TAB                            "  "
+# ifdef COMPILE
+    # define TAB                        "    "
+# else
+    # define TAB                        "  "
+# endif
 # define NWL                            ";\n"
+# ifdef COMPILE
+    # define INITIAL_TABS               ( 1 )
+# else
+    # define INITIAL_TABS               ( 0 )
+# endif
 # define PUT_TABS(j, tabs, c_code)      for (j = 0; j < tabs; j++) strcat (c_code, TAB)
 
 # define REPLACE_INC                    "*p += "               // [+]{0:x} - 7+
@@ -37,6 +45,25 @@ typedef char* string;
 # define REPLACE_LOOP_STOP              "} while (*p);\n"      // ]        - 14
 # define REPLACE_I                      "*p = getchar();\n"    // ,        - 16
 # define REPLACE_O                      "putchar(*p);\n"       // .        - 13
+
+# ifdef COMPILE
+    // to be included before the generated code
+    const string C_CODE_PREFIX = (
+        "# include <stdio.h>\n"
+        "# include <stdlib.h>\n"
+        "# include <stdint.h>\n"
+        "\n"
+        "int main(int argc, char **argv)\n"
+        "{\n"
+        "    int32_t *p = (int32_t *) malloc (sizeof (int32_t) * 100 * 1024);\n"
+    );
+
+    // to be included after the generated code
+    const string C_CODE_SUFFIX = (
+        "    free (p);\n"
+        "}\n"
+    );
+# endif
 
 /**
  * @brief Create a new string of size len using calloc
@@ -206,12 +233,15 @@ string bf_replace_to_c (const string opt_src)
     string c_code;
     char c;
 
-    tabs = 0;
+    tabs = INITIAL_TABS;
     count_operations = 0;
     len = strlen (opt_src);
 
     // allocating memory for c code
     c_code = new_string (
+    # ifdef COMPILE
+          strlen (C_CODE_PREFIX) + strlen (C_CODE_SUFFIX) +
+    # endif
           block_count (opt_src, '+') * strlen (REPLACE_INC "1000" NWL)
         + block_count (opt_src, '-') * strlen (REPLACE_DEC "1000" NWL)
         + block_count (opt_src, '>') * strlen (REPLACE_RSHIFT "1000" NWL)
@@ -221,6 +251,10 @@ string bf_replace_to_c (const string opt_src)
         + count (opt_src, '.') * strlen (REPLACE_I)
         + count (opt_src, ',') * strlen (REPLACE_O)
     );
+
+    # ifdef COMPILE
+        strcat (c_code, C_CODE_PREFIX);
+    # endif
 
     for (i = 0; i < len; i++) {
         c = opt_src[i];
@@ -270,6 +304,10 @@ string bf_replace_to_c (const string opt_src)
             strcat (c_code, REPLACE_LOOP_STOP);
         }
     }
+
+    # ifdef COMPILE
+        strcat (c_code, C_CODE_SUFFIX);
+    # endif
 
     return c_code;
 }
