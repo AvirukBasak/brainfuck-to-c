@@ -5,7 +5,7 @@
 This project is a solution to CodeWars Kata [Brainfuck Translator](https://www.codewars.com/kata/58924f2ca8c628f21a0001a1).
 
 ## Execution
-Use the `run` bash script.
+Compile using `make`. Use the `run` bash script to execute.
 ```
 USAGE: run "[Brainfuck code]"
 ```
