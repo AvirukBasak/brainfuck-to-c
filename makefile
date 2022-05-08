@@ -1,5 +1,5 @@
 NULL =
-TAB  = $(NULL)	$(NULL)
+TAB  = $(NULL)    $(NULL)
 
 # aliased options
 all: build
@@ -14,13 +14,12 @@ cf: cleanf
 # options for make
 options:
 	$(info USAGE:)
-	$(info $(TAB)make  o | options)
-	$(info $(TAB)make  d | debug)
-	$(info $(TAB)make  b | build)
-	$(info $(TAB)make  c | compiler)
-	$(info $(TAB)make  r | run exp="[expression]")
-	$(info $(TAB)make cl | clean)
-	$(info $(TAB)make cf | cleanf)
+	$(info $(TAB)make  o | options   -- display options)
+	$(info $(TAB)make  d | debug     -- debug build)
+	$(info $(TAB)make  b | build     -- optimised binary build)
+	$(info $(TAB)make  c | compiler  -- brainfuck compiler build)
+	$(info $(TAB)make cl | clean     -- clean ./bin/ directory)
+	$(info $(TAB)make cf | cleanf    -- forever clean ./bin/)
 	@exit
 
 # required stuff
@@ -33,7 +32,7 @@ BFC_FLAGS = -Wall -Ofast -D COMPILE="(1)"
 SRC_DIR   = ./src
 BIN_DIR   = ./bin
 
-SRC_PATH  = $(SRC_DIR)/lib/*.c $(SRC_DIR)/*.c
+SRC_PATH  = $(SRC_DIR)/*.c
 DBG_PATH  = $(BIN_DIR)/dbg-binary
 REL_PATH  = $(BIN_DIR)/binary
 BFC_PATH  = $(BIN_DIR)/bfc
