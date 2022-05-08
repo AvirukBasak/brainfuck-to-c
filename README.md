@@ -13,7 +13,7 @@ USAGE:
     make  b | build     -- optimised binary build
     make  c | compiler  -- brainfuck compiler build
     make cl | clean     -- clean ./bin/ directory
-    make cf | cleanf    -- forever clean ./bin/
+    make cf | cleanf    -- force clean ./bin/
 ```
 
 Use the `run` bash script to execute.
