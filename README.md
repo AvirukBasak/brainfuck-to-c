@@ -5,7 +5,7 @@
 This project is a solution to CodeWars Kata [Brainfuck Translator](https://www.codewars.com/kata/58924f2ca8c628f21a0001a1).
 
 ## Execution
-Compile using `make`. Use the `run` bash script to execute.
+Compile using `make`.
 ```
 USAGE:
     make  o | options   -- display options
@@ -14,7 +14,10 @@ USAGE:
     make  c | compiler  -- brainfuck compiler build
     make cl | clean     -- clean ./bin/ directory
     make cf | cleanf    -- forever clean ./bin/
+```
 
+Use the `run` bash script to execute.
+```
 USAGE: run "[Brainfuck code]"
 ```
 
