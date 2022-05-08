@@ -319,11 +319,15 @@ string brainfuck_to_c (const string src)
 {
     string stripped_src, opt_src, c_code;
 
+    # ifdef DEBUG
+        printf ("source:    %s\n", src);
+    # endif
+
     // remove non-code characters
     stripped_src = bf_strip (src);
 
     # ifdef DEBUG
-        printf ("striped:   %s\n", stripped_src);
+        printf ("\nstriped:   %s\n", stripped_src);
     # endif
 
     // validate
@@ -339,7 +343,7 @@ string brainfuck_to_c (const string src)
     # endif
 
     # ifdef DEBUG
-        printf ("optimised: %s\n", opt_src);
+        printf ("\noptimised: %s\n", opt_src);
     # endif
 
     // validate
