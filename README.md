@@ -7,6 +7,14 @@ This project is a solution to CodeWars Kata [Brainfuck Translator](https://www.c
 ## Execution
 Compile using `make`. Use the `run` bash script to execute.
 ```
+USAGE:
+    make  o | options   -- display options
+    make  d | debug     -- debug build
+    make  b | build     -- optimised binary build
+    make  c | compiler  -- brainfuck compiler build
+    make cl | clean     -- clean ./bin/ directory
+    make cf | cleanf    -- forever clean ./bin/
+
 USAGE: run "[Brainfuck code]"
 ```
 

@@ -19,7 +19,7 @@ options:
 	$(info $(TAB)make  b | build     -- optimised binary build)
 	$(info $(TAB)make  c | compiler  -- brainfuck compiler build)
 	$(info $(TAB)make cl | clean     -- clean ./bin/ directory)
-	$(info $(TAB)make cf | cleanf    -- forever clean ./bin/)
+	$(info $(TAB)make cf | cleanf    -- force clean ./bin/)
 	@exit
 
 # required stuff
