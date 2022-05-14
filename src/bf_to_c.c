@@ -269,22 +269,22 @@ string bf_replace_to_c (const string opt_src)
             char count_buffer[65] = { 0 };
             if (c == '+') {
                 strcat (c_code, REPLACE_INC);
-                sprintf (count_buffer, "%ld", count_operations);
+                sprintf (count_buffer, "%lu", count_operations);
                 strcat (c_code, count_buffer);
                 strcat (c_code, NWL);
             } else if (c == '-') {
                 strcat (c_code, REPLACE_DEC);
-                sprintf (count_buffer, "%ld", count_operations);
+                sprintf (count_buffer, "%lu", count_operations);
                 strcat (c_code, count_buffer);
                 strcat (c_code, NWL);
             } else if (c == '>') {
                 strcat (c_code, REPLACE_RSHIFT);
-                sprintf (count_buffer, "%ld", count_operations);
+                sprintf (count_buffer, "%lu", count_operations);
                 strcat (c_code, count_buffer);
                 strcat (c_code, NWL);
             } else if (c == '<') {
                 strcat (c_code, REPLACE_LSHIFT);
-                sprintf (count_buffer, "%ld", count_operations);
+                sprintf (count_buffer, "%lu", count_operations);
                 strcat (c_code, count_buffer);
                 strcat (c_code, NWL);
             }
